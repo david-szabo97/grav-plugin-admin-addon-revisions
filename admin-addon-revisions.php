@@ -13,8 +13,6 @@ class AdminAddonRevisionsPlugin extends Plugin {
   const DIR = '.revisions';
   // TODO: Get rid of this, hardcode at 'scandir'
   const SCAN_EXCLUDE = ['.', '..', self::DIR];
-  // TODO: Config
-  const MAX_REVISIONS = 10;
 
   public static function getSubscribedEvents() {
     return [
