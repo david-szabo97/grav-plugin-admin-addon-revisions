@@ -137,6 +137,7 @@ class Revision {
     $added = [];
     $removed = [];
     $changed = [];
+    $renamed = [];
     $equal = [];
 
     // Find removed files
@@ -150,6 +151,19 @@ class Revision {
     foreach ($newFiles as $newFile) {
       if (array_search($newFile, $oldFiles) === false) {
         $added[] = $newFile;
+      }
+    }
+
+    // Check for renamed files
+    foreach ($added as $kAdded => $addedFile) {
+      foreach ($removed as $kRemoved => $removedFile) {
+        $addedPath = $newDir . DS . $addedFile;
+        $removedPath = $oldDir . DS . $removedFile;
+        if (!Util::fileChanged($addedPath, $removedPath)) {
+          unset($added[$kAdded]);
+          unset($removed[$kRemoved]);
+          $renamed[] = ['from' => $removedFile, 'to' => $addedFile];
+        }
       }
     }
 
@@ -192,7 +206,7 @@ class Revision {
     }
     finfo_close($finfo);
 
-    $this->changes = compact('added', 'removed', 'changed', 'equal');
+    $this->changes = compact('added', 'removed', 'renamed', 'changed', 'equal');
 
     return $this->changes;
   }

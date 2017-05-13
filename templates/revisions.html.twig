@@ -64,6 +64,15 @@
         </ul>
       {% endif %}
 
+      {% if renamed is not empty %}
+        <h2>Renamed</h2>
+        <ul>
+        {% for file in renamed %}
+          <li>{{ file.from }} -> {{ file.to }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+
       {% if changed is not empty %}
         <h2>Changes</h2>
         <div>
