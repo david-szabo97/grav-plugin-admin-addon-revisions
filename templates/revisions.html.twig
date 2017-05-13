@@ -33,7 +33,7 @@
         {% if loop.last %}
           <div>{{ revision.name }} (Current)</div>
         {% else %}
-          <div><a href="{{base_url}}/revisions{{ context.route }}/action:diff/rev:{{ revision.name }}">{{ revision.name }}</a></div>
+          <div><a href="{{base_url}}/revisions{{ context.route }}/action:diff/rev:{{ revision.name }}">{{ revision.name }}</a> ({{ revision.createdAt|nicetime(true) }})</div>
         {% endif %}
       {% endfor %}
     {% endif %}
