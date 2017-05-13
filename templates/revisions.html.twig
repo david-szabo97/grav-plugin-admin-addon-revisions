@@ -18,9 +18,7 @@
 <div class="revision-container">
   {% if action == 'list-pages' %}
     {% for page in revPages %}
-      {% if page.folder != 'pages' %}
-        <div><a href="{{base_url}}{{ page.revisions > 0 ? '/revisions' ~ page.route : '#' }}">{{ page.title }} ({{ page.revisions }})</a></div>
-      {% endif %}
+      <div><a href="{{base_url}}{{ page.revisions > 0 ? '/revisions' ~ page.route : '#' }}">{{ page.title }} ({{ page.revisions }})</a></div>
     {% endfor %}
   {% endif %}
 
