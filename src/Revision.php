@@ -189,7 +189,7 @@ class Revision {
       $newFile = $newDir . DS . $change;
 
       $mime = finfo_file($finfo, $oldFile);
-      if (strpos($mime, "text") === 0) {
+      if (strpos($mime, "text") === 0 || strpos($mime, "application") === 0) {
         // Handle text files
         $change = ['filename' => $change, 'type' => 'text'];
         $diff = Diff::compare(file_get_contents($oldFile), file_get_contents($newFile), true);
