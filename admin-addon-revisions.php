@@ -203,6 +203,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
         // Check for maximum count and delete the oldest revisions first
         $maximum = $this->config->get(self::CONFIG_KEY . '.limit.maximum', 0);
         if ($maximum) {
+          // Refresh instances
           $revisions->instances(true);
           // Increment by one because we don't want to count the current revision
           if ($revisions->count() > $maximum + 1) {
