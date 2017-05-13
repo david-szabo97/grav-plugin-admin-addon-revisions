@@ -121,6 +121,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
           if ($revisions->exists()) {
             // Decrement by one, which is the current revision
             $page->revisions = $revisions->count() - 1;
+            $page->lastRevision = $revisions->last()->createdAt();
           } else {
             $page->revisions = 0;
           }

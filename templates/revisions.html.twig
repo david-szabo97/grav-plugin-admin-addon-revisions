@@ -23,7 +23,7 @@
       <div class="revision-list">
         {% for page in revPages %}
           {% if page.revisions > 0 %}
-            <div><a href="{{base_url}}{{ page.revisions > 0 ? '/revisions' ~ page.route : '#' }}">{{ page.title }} ({{ page.revisions }})</a></div>
+            <div><a href="{{base_url}}{{ page.revisions > 0 ? '/revisions' ~ page.route : '#' }}">{{ page.title }}</a> ({{ page.revisions }}) ({{ page.lastRevision|nicetime(true) }})</div>
           {% else %}
             <div>{{ page.title }} ({{ page.revisions }})</div>
           {% endif %}
