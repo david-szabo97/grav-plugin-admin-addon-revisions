@@ -26,7 +26,12 @@ class AdminAddonRevisionsPlugin extends Plugin {
       'onAdminTaskExecute' => ['onAdminTaskExecute', 0],
       'onTwigSiteVariables' => ['onTwigSiteVariables', 0],
       'onAdminMenu' => ['onAdminMenu', 0],
+      'onAssetsInitialized' => ['onAssetsInitialized', 0],
     ]);
+  }
+
+  public function onAssetsInitialized() {
+    $this->grav['assets']->addCss('plugin://admin-addon-revisions/assets/style.css');
   }
 
   public function onAdminMenu() {
