@@ -15,14 +15,14 @@
   {% if action == 'list-pages' %}
     {% for page in revPages %}
       {% if page.folder != 'pages' %}
-        <div><a href="{{ page.revisions > 0 ? '/admin/revisions' ~ page.route : '#' }}">{{ page.title }} ({{ page.revisions }})</a></div>
+        <div><a href="{{base_url}}{{ page.revisions > 0 ? '/revisions' ~ page.route : '#' }}">{{ page.title }} ({{ page.revisions }})</a></div>
       {% endif %}
     {% endfor %}
   {% endif %}
 
   {% if action == 'list-revisions' %}
     {% for revision in revisions %}
-    <div><a href="/admin/revisions{{ context.route }}/action:diff/rev:{{ revision }}">{{ revision }}</a></div>
+    <div><a href="{{base_url}}/revisions{{ context.route }}/action:diff/rev:{{ revision }}">{{ revision }}</a></div>
     {% endfor %}
   {% endif %}
 
