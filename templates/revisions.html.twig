@@ -2,7 +2,11 @@
 
 {% block titlebar %}
     <div class="button-bar">
+       {% if action == 'list-revisions' %}
+      <a class="button" href="{{ base_url }}/revisions"><i class="fa fa-reply"></i> {{ "PLUGIN_ADMIN.BACK"|tu }}</a>
+      {% endif  %}
       {% if action == 'diff' %}
+      <a class="button" href="{{base_url}}/revisions{{ context.route }}"><i class="fa fa-reply"></i> {{ "PLUGIN_ADMIN.BACK"|tu }}</a>
         <a class="button disable-after-click" href="{{ uri.addNonce(uri.route(true) ~ '/task' ~ config.system.param_sep ~ 'revDelete' ~ '/rev' ~ config.system.param_sep ~ revision, 'admin-form', 'admin-nonce') }}" class="page-delete" ><i class="fa fa-close"></i> Delete</a>
       {% endif %}
     </div>
