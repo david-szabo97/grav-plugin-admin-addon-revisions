@@ -27,44 +27,52 @@
   {% endif %}
 
   {% if action == 'diff' %}
-    <h2>Added</h2>
-    <ul>
-    {% for file in added %}
-      <li>{{ file }}</li>
-    {% endfor %}
-    </ul>
+    {% if added is not empty %}
+      <h2>Added</h2>
+      <ul>
+      {% for file in added %}
+        <li>{{ file }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
 
-    <h2>Removed</h2>
-    <ul>
-    {% for file in removed %}
-      <li>{{ file }}</li>
-    {% endfor %}
-    </ul>
+    {% if removed is not empty %}
+      <h2>Removed</h2>
+      <ul>
+      {% for file in removed %}
+        <li>{{ file }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
 
-    <h2>Changes</h2>
-    <div>
-    {% for file in changed %}
-      <div class="revision-change revision-change--type-{{ file.type }}">
-        {{ file.filename }}
-        {% if file.type == 'text' %}
-        <pre class="revision-change__changes">{{ file.diff|raw }}</pre>
-        {% elseif file.type == 'image' %}
-        <div class="revision-change__changes">
-            <div><img src="{{ file.oldUrl }}" /></div>
-            <span></span>
-            <div><img src="{{ file.newUrl }}" /></div>
+    {% if changed is not empty %}
+      <h2>Changes</h2>
+      <div>
+      {% for file in changed %}
+        <div class="revision-change revision-change--type-{{ file.type }}">
+          {{ file.filename }}
+          {% if file.type == 'text' %}
+          <pre class="revision-change__changes">{{ file.diff|raw }}</pre>
+          {% elseif file.type == 'image' %}
+          <div class="revision-change__changes">
+              <div><img src="{{ file.oldUrl }}" /></div>
+              <span></span>
+              <div><img src="{{ file.newUrl }}" /></div>
+          </div>
+          {% endif %}
         </div>
-        {% endif %}
+      {% endfor %}
       </div>
-    {% endfor %}
-    </div>
+    {% endif %}
 
-    <h2>No changes</h2>
-    <ul>
-    {% for file in equal %}
-      <li>{{ file }}</li>
-    {% endfor %}
-    </ul>
+    {% if equal is not empty %}
+      <h2>No changes</h2>
+      <ul>
+      {% for file in equal %}
+        <li>{{ file }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
   {% endif %}
 </div>
   <style>
