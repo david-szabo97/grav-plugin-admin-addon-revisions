@@ -122,6 +122,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
       if ($this->grav['uri']->basename() === 'revisions') {
         $action = 'list-pages';
         $pages = $this->grav['pages']->instances();
+        array_shift($pages);
         foreach ($pages as &$page) {
           $dir = $page->path() . DS . self::DIR;
           if (file_exists($dir)) {
