@@ -133,7 +133,13 @@ class AdminAddonRevisionsPlugin extends Plugin {
         $action = 'list-pages';
         $pages = $this->grav['pages']->instances();
         array_shift($pages);
-        foreach ($pages as &$page) {
+        foreach ($pages as $k => &$page) {
+          // Remove folders
+          if (!$page->file()) {
+            unset($pages[$k]);
+            continue;
+          }
+
           $dir = $page->path() . DS . self::DIR;
           if (file_exists($dir)) {
             $page->revisions = count($this->scandirForDirectories($dir));
