@@ -255,12 +255,8 @@ class AdminAddonRevisionsPlugin extends Plugin {
       $currentFiles = $this->scandirForFiles($pageDir);
       foreach ($currentFiles as $file) {
         $path = $pageDir . DS . $file;
-        if (is_dir($path)) {
-          // TODO: Handle directories?
-          $this->debugMessage('-- Found dir: '. $path .' .');
-        } else {
-          copy($path, $newRevDir . DS . $file);
-        }
+        // TODO: Handle directories?
+        copy($path, $newRevDir . DS . $file);
       }
 
       // Limit number of revisions
