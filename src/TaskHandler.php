@@ -1,6 +1,8 @@
 <?php
 namespace AdminAddonRevisions;
 
+use AdminAddonRevisions\Util\Util;
+
 class TaskHandler {
 
   public function __construct($plugin) {
@@ -60,7 +62,28 @@ class TaskHandler {
       return false;
     }
 
-    $revision->delete();
+    // Get rid of the current files (we have them as the last revision)
+    $currentDir = $page->path();
+    $currentFiles = Util::scandirForFiles($currentDir);
+    foreach ($currentFiles as $currentFile) {
+      unlink($currentDir . DS . $currentFile);
+    }
+
+    // Copy files from the revision to the page folder
+    $revDir = $revision->path();
+    $revFiles = $revision->files();
+    foreach ($revFiles as $revFile) {
+      copy($revDir . DS . $revFile, $currentDir . DS . $revFile);
+    }
+
+    // Create a new revision
+    // TODO: Limiting
+    $revision = new Revision($page);
+    $revision->create();
+
+    $messages = $this->plugin->grav()['messages'];
+    $messages->add("Succesfully reverted to the '$rev' revision", 'info');
+    $this->plugin->grav()->redirect($this->uri->url());
 
     return true;
   }
