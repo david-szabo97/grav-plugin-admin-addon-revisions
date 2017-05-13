@@ -169,15 +169,15 @@ class AdminAddonRevisionsPlugin extends Plugin {
         $changed = true;
 
         switch ($changes['type']) {
-          case 'count':
+          case Revision::CHANGE_COUNT:
             $this->debugMessage('-- Number of files changed, save revision.');
             break;
 
-          case 'not_exists':
+          case Revision::CHANGE_NOT_EXISTS:
             $this->debugMessage('-- File ' . $changes['file'] . ' does not exist in the revision, save revision.');
             break;
 
-          case 'content':
+          case Revision::CHANGE_CHANGED:
             $this->debugMessage('-- Content of ' . $changes['file'] . ' changed, save revision.');
             break;
         }

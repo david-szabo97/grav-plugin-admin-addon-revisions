@@ -8,6 +8,10 @@ use Grav\Plugin\AdminAddonRevisionsPlugin;
 
 class Revision {
 
+  const CHANGE_COUNT = 1;
+  const CHANGE_NOT_EXISTS = 2;
+  const CHANGE_CHANGED = 3;
+
   protected $plugin;
   protected $page;
   protected $name;
@@ -97,19 +101,19 @@ class Revision {
     $revFiles = Util::scandirForFiles($revDir);
 
     if (count($currentFiles) !== count($revFiles)) {
-      return ['type' => 'count'];
+      return ['type' => self::CHANGE_COUNT];
     }
 
     foreach ($currentFiles as $curFile) {
       $key = array_search($curFile, $revFiles);
       if ($key === false) {
-        return ['type' => 'not_exists', 'file' => $curFile];
+        return ['type' => self::CHANGE_NOT_EXISTS, 'file' => $curFile];
       }
 
       $revFile = $revDir . DS . $revFiles[$key];
       $curFile = $currentDir . DS . $curFile;
       if (filesize($curFile) !== filesize($revFile) || md5_file($curFile) !== md5_file($revFile)) {
-        return ['type' => 'changed', 'file' => $curFile];
+        return ['type' => self::CHANGE_CHANGED, 'file' => $curFile];
       }
     }
 
