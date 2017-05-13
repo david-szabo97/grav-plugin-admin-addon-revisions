@@ -1,4 +1,5 @@
 enabled: true
+directory: .revisions
 limit:
   maximum: 10
   older: 1 month

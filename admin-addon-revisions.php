@@ -8,11 +8,7 @@ use Grav\Common\Filesystem\Folder;
 
 class AdminAddonRevisionsPlugin extends Plugin {
 
-  // TODO: Add to pages exclude list so we can use non-hidden folders
-  // TODO: Config
-  const DIR = '.revisions';
-  // TODO: Get rid of this, hardcode at 'scandir'
-  const SCAN_EXCLUDE = ['.', '..', self::DIR];
+  protected $directoryName;
 
   public static function getSubscribedEvents() {
     return [
@@ -21,6 +17,13 @@ class AdminAddonRevisionsPlugin extends Plugin {
   }
 
   public function onPluginsInitialized() {
+    $this->directoryName = $this->config->get('plugins.admin-addon-revisions.directory', '.revisions');
+
+    // Add revisions directory to ignored folders
+    $ignoreFolders = $this->config->get('system.pages.ignore_folders');
+    $ignoreFolders[] = $this->directoryName;
+    $this->config->set('system.pages.ignore_folders', $ignoreFolders);
+
     $this->enable([
       'onPageProcessed' => ['onPageProcessed', 0],
       'onAdminTwigTemplatePaths' => ['onAdminTwigTemplatePaths', 0],
@@ -62,7 +65,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
     $page = $this->grav['admin']->page(true);
     $twig->twig_vars['context'] = $page;
     $pageDir = $page->path();
-    $revDir = $pageDir . DS . self::DIR;
+    $revDir = $pageDir . DS . $this->directoryName;
 
     if ($action === 'diff') {
       $rev = $this->grav['uri']->param('rev');
@@ -148,7 +151,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
             continue;
           }
 
-          $dir = $page->path() . DS . self::DIR;
+          $dir = $page->path() . DS . $this->directoryName;
           if (file_exists($dir)) {
             $page->revisions = count($this->scandirForDirectories($dir));
           } else {
@@ -182,7 +185,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
 
       $page = $this->grav['admin']->page(true);
       $pageDir = $page->path();
-      $revsDir = $pageDir . DS . self::DIR;
+      $revsDir = $pageDir . DS . $this->directoryName;
       $revDir = $revsDir . DS . $rev;
       if (!file_exists($revDir) || !is_dir($revDir)) {
         // TODO: Message
@@ -200,7 +203,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
     $page = $e['page'];
     $this->debugMessage('--- Admin Addon Revision - Analyzing \'' . $page->title(). '\' ---');
     $pageDir = $page->path();
-    $revDir = $pageDir . DS . self::DIR;
+    $revDir = $pageDir . DS . $this->directoryName;
 
     // Make sure we have a revisions directory
     if (!file_exists($revDir)) {
@@ -323,7 +326,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
   }
 
   public function scandir($directory, $fileOnly = true) {
-    $files = array_diff(scandir($directory), self::SCAN_EXCLUDE);
+    $files = array_diff(scandir($directory), ['.', '..', $this->directoryName]);
 
     $files = array_filter($files, function($file) use($directory, $fileOnly) {
       $t = is_dir($directory . DS . $file) === !$fileOnly;
