@@ -18,8 +18,6 @@ class AdminAddonRevisionsPlugin extends Plugin {
   }
 
   public function onPluginsInitialized() {
-    $uri = $this->grav['uri'];
-
     $this->enable([
       'onPageProcessed' => ['onPageProcessed', 0],
       'onAdminTwigTemplatePaths' => ['onAdminTwigTemplatePaths', 0],
