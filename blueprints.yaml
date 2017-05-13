@@ -1,6 +1,6 @@
 name: Admin Addon Revisions
-version: 0.1.0
-description: An extension for Admin plugin which adds revisions for pages.
+version: 1.0.0
+description: An extension for Admin plugin which adds revisions for pages. Integrates with admin, easily revert back to a previous revision whenever you want!
 icon: plug
 author:
   name: Dávid Szabó
@@ -28,3 +28,16 @@ form:
         0: Disabled
       validate:
         type: bool
+
+    directory:
+      type: text
+      label: Directory
+      help: Be careful, don't change this if you don't know the consequences!
+
+    limit.maximum:
+      type: text
+      label: Maximum revisions per page
+
+    limit.older:
+      type: text
+      label: Delete older than

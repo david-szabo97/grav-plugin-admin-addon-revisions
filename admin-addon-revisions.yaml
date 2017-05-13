@@ -1,5 +1,5 @@
 enabled: true
 directory: .revisions
 limit:
-  maximum: 10
-  older: 1 month
+  maximum: 50
+  older: 1 year
