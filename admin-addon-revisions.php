@@ -126,6 +126,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
           $change = ['filename' => $change, 'type' => 'unknown'];
         }
       }
+      finfo_close($finfo);
 
       $twig->twig_vars['added'] = $added;
       $twig->twig_vars['removed'] = $removed;
