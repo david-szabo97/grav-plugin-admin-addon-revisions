@@ -114,7 +114,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
         if (strpos($mime, "text") === 0) {
           // Handle text files
           $change = ['filename' => $change, 'type' => 'text'];
-          $diff = \Diff::compare( file_get_contents($oldFile), file_get_contents($newFile), true);
+          $diff = \Diff::compare(file_get_contents($oldFile), file_get_contents($newFile), true);
           $change['diff'] = $this->difftoHTML($diff);
         } else if (strpos($mime, "image") === 0) {
           // Handle image files
