@@ -24,8 +24,18 @@ class AdminAddonRevisionsPlugin extends Plugin {
       'onPageProcessed' => ['onPageProcessed', 0],
       'onAdminTwigTemplatePaths' => ['onAdminTwigTemplatePaths', 0],
       'onAdminTaskExecute' => ['onAdminTaskExecute', 0],
-      'onTwigSiteVariables' => ['onTwigSiteVariables', 0]
+      'onTwigSiteVariables' => ['onTwigSiteVariables', 0],
+      'onAdminMenu' => ['onAdminMenu', 0],
     ]);
+  }
+
+  public function onAdminMenu() {
+    $twig = $this->grav['twig'];
+    $twig->plugins_hooked_nav = (isset($twig->plugins_hooked_nav)) ? $twig->plugins_hooked_nav : [];
+    $twig->plugins_hooked_nav['Revisions'] = [
+      'location' => 'revisions',
+      'icon' => 'fa-file-text'
+    ];
   }
 
   public function onAdminTwigTemplatePaths($e) {
