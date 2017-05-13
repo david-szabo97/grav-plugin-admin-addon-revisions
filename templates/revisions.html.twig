@@ -20,13 +20,21 @@
   <div class="revision-container">
     {% if action == 'list-pages' %}
       {% for page in revPages %}
-        <div><a href="{{base_url}}{{ page.revisions > 0 ? '/revisions' ~ page.route : '#' }}">{{ page.title }} ({{ page.revisions }})</a></div>
+        {% if page.revisions > 0 %}
+          <div><a href="{{base_url}}{{ page.revisions > 0 ? '/revisions' ~ page.route : '#' }}">{{ page.title }} ({{ page.revisions }})</a></div>
+        {% else %}
+          <div>{{ page.title }} ({{ page.revisions }})</div>
+        {% endif %}
       {% endfor %}
     {% endif %}
 
     {% if action == 'list-revisions' %}
       {% for revision in revisions %}
-      <div><a href="{{base_url}}/revisions{{ context.route }}/action:diff/rev:{{ revision }}">{{ revision }}</a></div>
+        {% if loop.last %}
+          <div>{{ revision }} (Current)</div>
+        {% else %}
+          <div><a href="{{base_url}}/revisions{{ context.route }}/action:diff/rev:{{ revision }}">{{ revision }}</a></div>
+        {% endif %}
       {% endfor %}
     {% endif %}
 

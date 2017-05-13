@@ -158,7 +158,8 @@ class AdminAddonRevisionsPlugin extends Plugin {
 
           $dir = $page->path() . DS . $this->directoryName;
           if (file_exists($dir)) {
-            $page->revisions = count($this->scandirForDirectories($dir));
+            // Decrement by one, which is the current revision
+            $page->revisions = count(Util::scandirForDirectories($dir)) - 1;
           } else {
             $page->revisions = 0;
           }
@@ -274,8 +275,8 @@ class AdminAddonRevisionsPlugin extends Plugin {
         // Check for maximum count and delete the oldest revisions first
         $maximum = $this->config->get(self::CONFIG_KEY . '.limit.maximum', 0);
         if ($maximum) {
-          $revisions = $this->scandirForDirectories($revDir);
-          if (count($revisions) > $maximum) {
+          // Increment by one because we don't want to count the current revision
+          if (count($revisions) > $maximum + 1) {
             $firstRev = reset($revisions);
             $this->debugMessage('-- Deleting revision: ' . $firstRev . ', limit exceeded.');
             Folder::delete($revDir . DS . $firstRev);
