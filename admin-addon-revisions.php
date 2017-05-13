@@ -22,7 +22,131 @@ class AdminAddonRevisionsPlugin extends Plugin {
 
     $this->enable([
       'onPageProcessed' => ['onPageProcessed', 0],
+      'onAdminTwigTemplatePaths' => ['onAdminTwigTemplatePaths', 0],
+      'onAdminTaskExecute' => ['onAdminTaskExecute', 0],
+      'onTwigSiteVariables' => ['onTwigSiteVariables', 0]
     ]);
+  }
+
+  public function onAdminTwigTemplatePaths($e) {
+    $paths = $e['paths'];
+    $paths[] = __DIR__ . DS . 'templates';
+    $e['paths'] = $paths;
+  }
+
+  public function onTwigSiteVariables() {
+    $twig = $this->grav['twig'];
+    $page = $this->grav['page'];
+
+    if ($page->slug() !== 'revisions') {
+      return;
+    }
+
+    $action = $this->grav['uri']->param('action');
+    $page = $this->grav['admin']->page(true);
+    $twig->twig_vars['context'] = $page;
+    $pageDir = $page->path();
+    $revDir = $pageDir . DS . self::DIR;
+
+    if ($action === 'diff') {
+      $rev = $this->grav['uri']->param('rev');
+      $currentFiles = array_diff(scandir($pageDir), self::SCAN_EXCLUDE);
+      $revFiles = array_diff(scandir($revDir . DS . $rev), self::SCAN_EXCLUDE);
+
+      $oldDir = $revDir . DS . $rev;
+      $oldFiles = $revFiles;
+      $newDir = $pageDir;
+      $newFiles = $currentFiles;
+
+      $added = [];
+      $removed = [];
+      $changed = [];
+      $equal = [];
+
+      // Find removed files
+      foreach ($oldFiles as $oldFile) {
+        if (array_search($oldFile, $newFiles) === false) {
+          $removed[] = $oldFile;
+        }
+      }
+
+      // Find added files
+      foreach ($newFiles as $newFile) {
+        if (array_search($newFile, $oldFiles) === false) {
+          $added[] = $newFile;
+        }
+      }
+
+      // Find changed and equal files
+      foreach ($oldFiles as $oldFile) {
+        $key = array_search($oldFile, $newFiles);
+        if ($key !== false) {
+          $newFile = $newFiles[$key];
+          if (filesize($oldDir . DS . $oldFile) !== filesize($newDir . DS . $newFile) || md5_file($oldDir . DS . $oldFile) !== md5_file($newDir . DS . $newFile)) {
+            $changed[] = $oldFile;
+          } else {
+            $equal[] = $oldFile;
+          }
+        }
+      }
+
+      include __DIR__ . DS . 'class.Diff.php';
+      $finfo = finfo_open(FILEINFO_MIME_TYPE);
+      foreach ($changed as &$change) {
+        $oldFile = $oldDir . DS . $change;
+        $newFile = $newDir . DS . $change;
+
+        $mime = finfo_file($finfo, $oldFile);
+        if (strpos($mime, "text") === 0) {
+          $change = ['filename' => $change, 'type' => 'text'];
+          $diff = \Diff::compare( file_get_contents($oldFile), file_get_contents($newFile), true);
+          $change['diff'] = $this->difftoHTML($diff);
+        } else if (strpos($mime, "image") === 0) {
+          $change = ['filename' => $change, 'type' => 'image'];
+          $change['oldUrl'] = $this->filePathToUrl($oldFile);
+          $change['newUrl'] = $this->filePathToUrl($newFile);
+        }
+      }
+
+      $twig->twig_vars['added'] = $added;
+      $twig->twig_vars['removed'] = $removed;
+      $twig->twig_vars['changed'] = $changed;
+      $twig->twig_vars['equal'] = $equal;
+      $twig->twig_vars['revision'] = $rev;
+    } else {
+      $action = 'list';
+      $twig->twig_vars['revisions'] = array_diff(scandir($revDir), self::SCAN_EXCLUDE);
+    }
+
+    $twig->twig_vars['action'] = $action;
+  }
+
+  public function onAdminTaskExecute($e) {
+    $method = $e['method'];
+
+    if ($e['method'] === 'taskRevDelete') {
+      // TODO: Permission
+
+      $rev = $this->grav['uri']->param('rev');
+      if (!$rev) {
+        // TODO: Message
+        return false;
+      }
+
+      $page = $this->grav['admin']->page(true);
+      $pageDir = $page->path();
+      $revsDir = $pageDir . DS . self::DIR;
+      $revDir = $revsDir . DS . $rev;
+      if (!file_exists($revDir) || !is_dir($revDir)) {
+        // TODO: Message
+        return false;
+      }
+
+      Folder::delete($revDir);
+      return true;
+    }
+
+    return false;
   }
 
   public function onPageProcessed(Event $e) {
@@ -34,7 +158,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
     // Make sure we have a revisions directory
     if (!file_exists($revDir)) {
       $this->debugMessage('-- Creating revision directory...');
-      mkdir($revDir, 0770);
+      mkdir($revDir, 0770); // TODO: const / config
     }
 
     $changed = false;
@@ -72,7 +196,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
 
     if ($changed) {
       $this->debugMessage('-- Something changed, saving revision...');
-      $newRevDir = $revDir . DS . date('Ymd-His');
+      $newRevDir = $revDir . DS . date('Ymd-His'); // TODO: const
       if (file_exists($newRevDir)) {
         $this->debugMessage('-- Revision directory exists, skipping...');
         return;
@@ -96,6 +220,30 @@ class AdminAddonRevisionsPlugin extends Plugin {
 
   private function debugMessage($msg) {
     $this->grav['debugger']->addMessage($msg);
+  }
+
+  private function diffToHTML($diff) {
+    $html = '';
+
+    foreach ($diff as $c) {
+      switch ($c[1]) {
+        case \Diff::UNMODIFIED:
+          $html .= '' . $c[0];
+          break;
+        case \Diff::INSERTED:
+          $html .= '<span class="inserted">' . $c[0]. '</span>';
+          break;
+        case \Diff::DELETED:
+          $html .= '<span class="deleted">' . $c[0]. '</span>';
+          break;
+      }
+    }
+
+    return $html;
+  }
+
+  public function filePathToUrl($filePath) {
+    return Grav::instance()['base_url'] . preg_replace('|^' . preg_quote(GRAV_ROOT) . '|', '', $filePath);
   }
 
 }
