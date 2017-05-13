@@ -8,7 +8,7 @@
 
     {% if action == 'diff' %}
       <a class="button" href="{{base_url}}/revisions{{ context.route }}"><i class="fa fa-reply"></i> {{ "PLUGIN_ADMIN.BACK"|tu }}</a>
-      <a class="button disable-after-click" href="{{ uri.addNonce(uri.route(true) ~ '/task' ~ config.system.param_sep ~ 'revDelete' ~ '/rev' ~ config.system.param_sep ~ revision, 'admin-form', 'admin-nonce') }}" class="page-delete" ><i class="fa fa-close"></i> Delete</a>
+      <a class="button disable-after-click" href="{{ uri.addNonce(uri.route(true) ~ '/task' ~ config.system.param_sep ~ 'revDelete' ~ '/rev' ~ config.system.param_sep ~ revision.name, 'admin-form', 'admin-nonce') }}" class="page-delete" ><i class="fa fa-close"></i> Delete</a>
     {% endif %}
   </div>
   
@@ -29,11 +29,11 @@
     {% endif %}
 
     {% if action == 'list-revisions' %}
-      {% for revision in revisions %}
+      {% for revision in revisions.instances %}
         {% if loop.last %}
-          <div>{{ revision }} (Current)</div>
+          <div>{{ revision.name }} (Current)</div>
         {% else %}
-          <div><a href="{{base_url}}/revisions{{ context.route }}/action:diff/rev:{{ revision }}">{{ revision }}</a></div>
+          <div><a href="{{base_url}}/revisions{{ context.route }}/action:diff/rev:{{ revision.name }}">{{ revision.name }}</a></div>
         {% endif %}
       {% endfor %}
     {% endif %}

@@ -1,5 +1,7 @@
 <?php
 
+namespace AdminAddonRevisions\Util;
+
 /*
 
 class.Diff.php
