@@ -119,8 +119,22 @@ class AdminAddonRevisionsPlugin extends Plugin {
       $twig->twig_vars['equal'] = $equal;
       $twig->twig_vars['revision'] = $rev;
     } else {
-      $action = 'list';
-      $twig->twig_vars['revisions'] = array_diff(scandir($revDir), self::SCAN_EXCLUDE);
+      if ($this->grav['uri']->basename() === 'revisions') {
+        $action = 'list-pages';
+        $pages = $this->grav['pages']->instances();
+        foreach ($pages as &$page) {
+          $dir = $page->path() . DS . self::DIR;
+          if (file_exists($dir)) {
+            $page->revisions = count(array_diff(scandir($dir), self::SCAN_EXCLUDE));
+          } else {
+            $page->revisions = 0;
+          }
+        }
+        $twig->twig_vars['revPages'] = $pages;
+      } else {
+        $action = 'list-revisions';
+        $twig->twig_vars['revisions'] = array_diff(scandir($revDir), self::SCAN_EXCLUDE);
+      }
     }
 
     $twig->twig_vars['action'] = $action;

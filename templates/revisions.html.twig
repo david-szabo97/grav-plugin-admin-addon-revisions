@@ -12,7 +12,15 @@
 {% block content %}
 <h1>{{ context.title }}</h1>
 <div class="revision-container">
-  {% if action == 'list' %}
+  {% if action == 'list-pages' %}
+    {% for page in revPages %}
+      {% if page.folder != 'pages' %}
+        <div><a href="/admin/revisions{{ page.route }}">{{ page.title }} ({{ page.revisions }})</a></div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% if action == 'list-revisions' %}
     {% for revision in revisions %}
     <div><a href="/admin/revisions{{ context.route }}/action:diff/rev:{{ revision }}">{{ revision }}</a></div>
     {% endfor %}
