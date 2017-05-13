@@ -10,6 +10,8 @@ class AdminAddonRevisionsPlugin extends Plugin {
 
   const DIR = '.revisions';
   const SCAN_EXCLUDE = ['.', '..', self::DIR];
+  // TODO: Config
+  const MAX_REVISIONS = 10;
 
   public static function getSubscribedEvents() {
     return [
@@ -255,6 +257,18 @@ class AdminAddonRevisionsPlugin extends Plugin {
           $this->debugMessage('-- Found dir: '. $path .' .');
         } else {
           copy($path, $newRevDir . DS . $file);
+        }
+      }
+
+      // Limit number of revisions
+      while (true) {
+        $revisions = $this->scandirForDirectories($revDir);
+        if (count($revisions) > self::MAX_REVISIONS) {
+          $firstRev = reset($revisions);
+          $this->debugMessage('-- Deleting revision: ' . $firstRev . ', limit exceeded.');
+          Folder::delete($revDir . DS . $firstRev);
+        } else {
+          break;
         }
       }
     } else {
