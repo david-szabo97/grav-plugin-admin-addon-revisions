@@ -60,8 +60,8 @@ class AdminAddonRevisionsPlugin extends Plugin {
 
     if ($action === 'diff') {
       $rev = $this->grav['uri']->param('rev');
-      $currentFiles = array_diff(scandir($pageDir), self::SCAN_EXCLUDE);
-      $revFiles = array_diff(scandir($revDir . DS . $rev), self::SCAN_EXCLUDE);
+      $currentFiles = $this->scandirForFiles($pageDir);
+      $revFiles = $this->scandirForFiles($revDir . DS . $rev);
 
       $oldDir = $revDir . DS . $rev;
       $oldFiles = $revFiles;
@@ -136,7 +136,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
         foreach ($pages as &$page) {
           $dir = $page->path() . DS . self::DIR;
           if (file_exists($dir)) {
-            $page->revisions = count(array_diff(scandir($dir), self::SCAN_EXCLUDE));
+            $page->revisions = count($this->scandirForDirectories($dir));
           } else {
             $page->revisions = 0;
           }
@@ -146,7 +146,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
       } else {
         $action = 'list-revisions';
         if (file_exists($revDir)) {
-          $twig->twig_vars['revisions'] = array_diff(scandir($revDir), self::SCAN_EXCLUDE);
+          $twig->twig_vars['revisions'] = $this->scandirForDirectories($revDir);
         }
       }
     }
@@ -195,16 +195,16 @@ class AdminAddonRevisionsPlugin extends Plugin {
     }
 
     $changed = false;
-    $revisions = array_diff(scandir($revDir), self::SCAN_EXCLUDE);
+    $revisions = $this->scandirForDirectories($revDir);
     if (!$revisions) {
       $this->debugMessage('-- No revisions found, save this one.');
       $changed = true;
     } else {
       $lastRev = end($revisions);
 
-      $currentFiles = array_diff(scandir($pageDir), self::SCAN_EXCLUDE);
+      $currentFiles = $this->scandirForFiles($pageDir);
       $lastRevDir = $revDir . DS . $lastRev;
-      $lastRevFiles = array_diff(scandir($lastRevDir), self::SCAN_EXCLUDE);
+      $lastRevFiles = $this->scandirForFiles($lastRevDir);
       if (count($currentFiles) !== count($lastRevFiles)) {
         $this->debugMessage('-- Number of files changed, save revision.');
         $changed = true;
@@ -236,7 +236,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
       }
 
       mkdir($newRevDir);
-      $currentFiles = array_diff(scandir($pageDir), self::SCAN_EXCLUDE);
+      $currentFiles = $this->scandirForFiles($pageDir);
       foreach ($currentFiles as $file) {
         $path = $pageDir . DS . $file;
         if (is_dir($path)) {
@@ -277,6 +277,25 @@ class AdminAddonRevisionsPlugin extends Plugin {
 
   public function filePathToUrl($filePath) {
     return Grav::instance()['base_url'] . preg_replace('|^' . preg_quote(GRAV_ROOT) . '|', '', $filePath);
+  }
+
+  public function scandir($directory, $fileOnly = true) {
+    $files = array_diff(scandir($directory), self::SCAN_EXCLUDE);
+
+    $files = array_filter($files, function($file) use($directory, $fileOnly) {
+      $t = is_dir($directory . DS . $file) === !$fileOnly;
+      return $t;
+    });
+
+    return $files;
+  }
+
+  public function scandirForFiles($directory) {
+    return $this->scandir($directory, true);
+  }
+
+  public function scandirForDirectories($directory) {
+    return $this->scandir($directory, false);
   }
 
 }
