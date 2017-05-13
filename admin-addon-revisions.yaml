@@ -1,1 +1,4 @@
 enabled: true
+limit:
+  maximum: 10
+  older: 1 month

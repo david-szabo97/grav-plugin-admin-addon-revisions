@@ -260,16 +260,37 @@ class AdminAddonRevisionsPlugin extends Plugin {
       }
 
       // Limit number of revisions
-      while (true) {
-        $revisions = $this->scandirForDirectories($revDir);
-        if (count($revisions) > self::MAX_REVISIONS) {
-          $firstRev = reset($revisions);
-          $this->debugMessage('-- Deleting revision: ' . $firstRev . ', limit exceeded.');
-          Folder::delete($revDir . DS . $firstRev);
-        } else {
-          break;
+      $deletedRevision = false;
+      do {
+        $deletedRevision = false;
+
+        // Check for maximum count and delete the oldest revisions first
+        $maximum = $this->config->get('plugins.admin-addon-revisions.limit.maximum', 0);
+        if ($maximum) {
+          $revisions = $this->scandirForDirectories($revDir);
+          if (count($revisions) > $maximum) {
+            $firstRev = reset($revisions);
+            $this->debugMessage('-- Deleting revision: ' . $firstRev . ', limit exceeded.');
+            Folder::delete($revDir . DS . $firstRev);
+            $deletedRevision = true;
+          }
         }
-      }
+
+        // Check for old revisions
+        $older = $this->config->get('plugins.admin-addon-revisions.limit.older', null);
+        if ($older) {
+          $revisions = $this->scandirForDirectories($revDir);
+          foreach ($revisions as $rev) {
+            $time = $this->directoryToDate($rev);
+            $olderTime = strtotime('-' . $older);
+            if ($olderTime !== false && $older > $time) {
+              $this->debugMessage('-- Deleting revision: ' . $rev . ', older than ' . $older . '.');
+              Folder::delete($revDir . DS . $rev);
+              $deletedRevision = true;
+            }
+          }
+        }
+      } while($deletedRevision);
     } else {
       $this->debugMessage('-- No changes.');
     }
@@ -320,6 +341,20 @@ class AdminAddonRevisionsPlugin extends Plugin {
 
   public function scandirForDirectories($directory) {
     return $this->scandir($directory, false);
+  }
+
+  private function directoryToDate($dir) {
+    $dir = basename($dir);
+
+    $year = substr($dir, 0, 4);
+    $month = substr($dir, 4, 2);
+    $day = substr($dir, 6, 2);
+    $hour = substr($dir, 9, 2);
+    $minute = substr($dir, 11, 2);
+    $second = substr($dir, 13, 2);
+
+    $str = "$year-$month-$day $hour:$minute:$second";
+    return strtotime($str);
   }
 
 }
