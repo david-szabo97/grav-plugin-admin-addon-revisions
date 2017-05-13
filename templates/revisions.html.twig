@@ -15,7 +15,7 @@
   {% if action == 'list-pages' %}
     {% for page in revPages %}
       {% if page.folder != 'pages' %}
-        <div><a href="/admin/revisions{{ page.route }}">{{ page.title }} ({{ page.revisions }})</a></div>
+        <div><a href="{{ page.revisions > 0 ? '/admin/revisions' ~ page.route : '#' }}">{{ page.title }} ({{ page.revisions }})</a></div>
       {% endif %}
     {% endfor %}
   {% endif %}
