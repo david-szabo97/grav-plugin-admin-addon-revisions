@@ -1,6 +1,18 @@
 /* Base */
 .revision-container {
-  margin: 0 20px;
+  margin: 0 3rem;
+}
+
+.revision-container ul {
+  margin-top: 0.25rem;
+}
+
+.revision-list > div {
+  padding: 1rem 0;
+}
+
+.revision-list > div + div {
+  border-top: 1px solid #d6d6d6;
 }
 
 /* Image type */

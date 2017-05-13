@@ -11,32 +11,37 @@
       <a class="button disable-after-click" href="{{ uri.addNonce(uri.route(true) ~ '/task' ~ config.system.param_sep ~ 'revDelete' ~ '/rev' ~ config.system.param_sep ~ revision.name, 'admin-form', 'admin-nonce') }}" class="page-delete" ><i class="fa fa-close"></i> Delete</a>
     {% endif %}
   </div>
-  
-  <h1><i class="fa fa-fw fa-file-text-o"></i> Manage Revision</h1>
+
+  {% if action == 'list-pages' or action == 'list-revisions' %}<h1><i class="fa fa-fw fa-file-text-o"></i> Manage Revisions</h1>{% endif %}
+  {% if action == 'diff' %}<h1><i class="fa fa-fw fa-file-text-o"></i> Manage Revision</h1>{% endif %}
 {% endblock %}
 
 {% block content %}
-  <h1>{{ context.title ?: 'Revisions' }}</h1>
+  <h1>{{ context.title ?: 'Pages' }}</h1>
   <div class="revision-container">
-    <h2>Revisions</h2>
     {% if action == 'list-pages' %}
-      {% for page in revPages %}
-        {% if page.revisions > 0 %}
-          <div><a href="{{base_url}}{{ page.revisions > 0 ? '/revisions' ~ page.route : '#' }}">{{ page.title }} ({{ page.revisions }})</a></div>
-        {% else %}
-          <div>{{ page.title }} ({{ page.revisions }})</div>
-        {% endif %}
-      {% endfor %}
+      <div class="revision-list">
+        {% for page in revPages %}
+          {% if page.revisions > 0 %}
+            <div><a href="{{base_url}}{{ page.revisions > 0 ? '/revisions' ~ page.route : '#' }}">{{ page.title }} ({{ page.revisions }})</a></div>
+          {% else %}
+            <div>{{ page.title }} ({{ page.revisions }})</div>
+          {% endif %}
+        {% endfor %}
+      </div>
     {% endif %}
 
     {% if action == 'list-revisions' %}
-      {% for revision in revisions.instances %}
-        {% if loop.last %}
-          <div>{{ revision.name }} (Current)</div>
-        {% else %}
-          <div><a href="{{base_url}}/revisions{{ context.route }}/action:diff/rev:{{ revision.name }}">{{ revision.name }}</a> ({{ revision.createdAt|nicetime(true) }})</div>
-        {% endif %}
-      {% endfor %}
+      <h2>Revisions</h2>
+      <div class="revision-list">
+        {% for revision in revisions.instances %}
+          {% if loop.last %}
+            <div>{{ revision.name }} (Current)</div>
+          {% else %}
+            <div><a href="{{base_url}}/revisions{{ context.route }}/action:diff/rev:{{ revision.name }}">{{ revision.name }}</a> ({{ revision.createdAt|nicetime(true) }})</div>
+          {% endif %}
+        {% endfor %}
+      </div>
     {% endif %}
 
     {% if action == 'diff' %}
