@@ -18,6 +18,7 @@
 {% block content %}
   <h1>{{ context.title ?: 'Revisions' }}</h1>
   <div class="revision-container">
+    <h2>Revisions</h2>
     {% if action == 'list-pages' %}
       {% for page in revPages %}
         {% if page.revisions > 0 %}
