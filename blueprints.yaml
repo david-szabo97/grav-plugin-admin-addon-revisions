@@ -1,0 +1,30 @@
+name: Admin Addon Revisions
+version: 0.1.0
+description: An extension for Admin plugin which adds revisions for pages.
+icon: plug
+author:
+  name: Dávid Szabó
+  email: david.szabo97@gmail.com
+homepage: https://github.com/david-szabo97/grav-plugin-admin-addon-revisions
+keywords: grav, plugin, admin, revisions
+bugs: https://github.com/david-szabo97/grav-plugin-admin-addon-revisions/issues
+docs: https://github.com/david-szabo97/grav-plugin-admin-addon-revisions/blob/master/README.md
+license: MIT
+
+dependencies:
+    - { name: grav, version: '>=1.0.0' }
+    - { name: admin, version: '>=1.0.0' }
+
+form:
+  validation: strict
+  fields:
+    enabled:
+      type: toggle
+      label: Plugin status
+      highlight: 1
+      default: 0
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
