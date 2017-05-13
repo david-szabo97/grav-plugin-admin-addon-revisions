@@ -1,80 +1,82 @@
 {% extends 'partials/base.html.twig' %}
 
 {% block titlebar %}
-    <div class="button-bar">
-       {% if action == 'list-revisions' %}
+  <div class="button-bar">
+    {% if action == 'list-revisions' %}
       <a class="button" href="{{ base_url }}/revisions"><i class="fa fa-reply"></i> {{ "PLUGIN_ADMIN.BACK"|tu }}</a>
-      {% endif  %}
-      {% if action == 'diff' %}
+    {% endif %}
+
+    {% if action == 'diff' %}
       <a class="button" href="{{base_url}}/revisions{{ context.route }}"><i class="fa fa-reply"></i> {{ "PLUGIN_ADMIN.BACK"|tu }}</a>
-        <a class="button disable-after-click" href="{{ uri.addNonce(uri.route(true) ~ '/task' ~ config.system.param_sep ~ 'revDelete' ~ '/rev' ~ config.system.param_sep ~ revision, 'admin-form', 'admin-nonce') }}" class="page-delete" ><i class="fa fa-close"></i> Delete</a>
-      {% endif %}
-    </div>
-    <h1><i class="fa fa-fw fa-file-text-o"></i> Manage Revision</h1>
+      <a class="button disable-after-click" href="{{ uri.addNonce(uri.route(true) ~ '/task' ~ config.system.param_sep ~ 'revDelete' ~ '/rev' ~ config.system.param_sep ~ revision, 'admin-form', 'admin-nonce') }}" class="page-delete" ><i class="fa fa-close"></i> Delete</a>
+    {% endif %}
+  </div>
+  
+  <h1><i class="fa fa-fw fa-file-text-o"></i> Manage Revision</h1>
 {% endblock %}
 
 {% block content %}
-<h1>{{ context.title ?: 'Revisions' }}</h1>
-<div class="revision-container">
-  {% if action == 'list-pages' %}
-    {% for page in revPages %}
-      <div><a href="{{base_url}}{{ page.revisions > 0 ? '/revisions' ~ page.route : '#' }}">{{ page.title }} ({{ page.revisions }})</a></div>
-    {% endfor %}
-  {% endif %}
-
-  {% if action == 'list-revisions' %}
-    {% for revision in revisions %}
-    <div><a href="{{base_url}}/revisions{{ context.route }}/action:diff/rev:{{ revision }}">{{ revision }}</a></div>
-    {% endfor %}
-  {% endif %}
-
-  {% if action == 'diff' %}
-    {% if added is not empty %}
-      <h2>Added</h2>
-      <ul>
-      {% for file in added %}
-        <li>{{ file }}</li>
+  <h1>{{ context.title ?: 'Revisions' }}</h1>
+  <div class="revision-container">
+    {% if action == 'list-pages' %}
+      {% for page in revPages %}
+        <div><a href="{{base_url}}{{ page.revisions > 0 ? '/revisions' ~ page.route : '#' }}">{{ page.title }} ({{ page.revisions }})</a></div>
       {% endfor %}
-      </ul>
     {% endif %}
 
-    {% if removed is not empty %}
-      <h2>Removed</h2>
-      <ul>
-      {% for file in removed %}
-        <li>{{ file }}</li>
+    {% if action == 'list-revisions' %}
+      {% for revision in revisions %}
+      <div><a href="{{base_url}}/revisions{{ context.route }}/action:diff/rev:{{ revision }}">{{ revision }}</a></div>
       {% endfor %}
-      </ul>
     {% endif %}
 
-    {% if changed is not empty %}
-      <h2>Changes</h2>
-      <div>
-      {% for file in changed %}
-        <div class="revision-change revision-change--type-{{ file.type }}">
-          {{ file.filename }}
-          {% if file.type == 'text' %}
-          <pre class="revision-change__changes">{{ file.diff|raw }}</pre>
-          {% elseif file.type == 'image' %}
-          <div class="revision-change__changes">
-              <div><img src="{{ file.oldUrl }}" /></div>
-              <span></span>
-              <div><img src="{{ file.newUrl }}" /></div>
+    {% if action == 'diff' %}
+      {% if added is not empty %}
+        <h2>Added</h2>
+        <ul>
+        {% for file in added %}
+          <li>{{ file }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if removed is not empty %}
+        <h2>Removed</h2>
+        <ul>
+        {% for file in removed %}
+          <li>{{ file }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if changed is not empty %}
+        <h2>Changes</h2>
+        <div>
+        {% for file in changed %}
+          <div class="revision-change revision-change--type-{{ file.type }}">
+            {{ file.filename }}
+            {% if file.type == 'text' %}
+            <pre class="revision-change__changes">{{ file.diff|raw }}</pre>
+            {% elseif file.type == 'image' %}
+            <div class="revision-change__changes">
+                <div><img src="{{ file.oldUrl }}" /></div>
+                <span></span>
+                <div><img src="{{ file.newUrl }}" /></div>
+            </div>
+            {% endif %}
           </div>
-          {% endif %}
+        {% endfor %}
         </div>
-      {% endfor %}
-      </div>
-    {% endif %}
+      {% endif %}
 
-    {% if equal is not empty %}
-      <h2>No changes</h2>
-      <ul>
-      {% for file in equal %}
-        <li>{{ file }}</li>
-      {% endfor %}
-      </ul>
+      {% if equal is not empty %}
+        <h2>No changes</h2>
+        <ul>
+        {% for file in equal %}
+          <li>{{ file }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
     {% endif %}
-  {% endif %}
-</div>
+  </div>
 {% endblock %}
