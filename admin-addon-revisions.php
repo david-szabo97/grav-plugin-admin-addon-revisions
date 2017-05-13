@@ -8,7 +8,10 @@ use Grav\Common\Filesystem\Folder;
 
 class AdminAddonRevisionsPlugin extends Plugin {
 
+  // TODO: Add to pages exclude list so we can use non-hidden folders
+  // TODO: Config
   const DIR = '.revisions';
+  // TODO: Get rid of this, hardcode at 'scandir'
   const SCAN_EXCLUDE = ['.', '..', self::DIR];
   // TODO: Config
   const MAX_REVISIONS = 10;
