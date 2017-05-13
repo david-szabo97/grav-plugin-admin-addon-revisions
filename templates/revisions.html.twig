@@ -35,8 +35,8 @@
     {% if action == 'list-revisions' %}
       <h2>Revisions</h2>
       <div class="revision-list">
-        {% for revision in revisions.instances %}
-          {% if loop.last %}
+        {% for revision in revisions.instances|reverse %}
+          {% if loop.first %}
             <div>{{ revision.name }} (Current)</div>
           {% else %}
             <div><a href="{{base_url}}/revisions{{ context.route }}/action:diff/rev:{{ revision.name }}">{{ revision.name }}</a> ({{ revision.createdAt|nicetime(true) }})</div>
@@ -46,6 +46,7 @@
     {% endif %}
 
     {% if action == 'diff' %}
+      <p>All changes since the <strong>{{ revision.name }}</strong> revision (Comparing <strong>{{ revision.name }}</strong> to current content)</p>
       {% if added is not empty %}
         <h2>Added</h2>
         <ul>
