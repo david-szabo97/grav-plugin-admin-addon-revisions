@@ -103,6 +103,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
         }
       }
 
+      // Process changes
       include __DIR__ . DS . 'class.Diff.php';
       $finfo = finfo_open(FILEINFO_MIME_TYPE);
       foreach ($changed as &$change) {
