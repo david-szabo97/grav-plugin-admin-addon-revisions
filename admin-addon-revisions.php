@@ -8,6 +8,10 @@ use Grav\Common\Filesystem\Folder;
 
 class AdminAddonRevisionsPlugin extends Plugin {
 
+  const SLUG = 'admin-addon-revisions';
+  const PAGE_LOCATION = 'revisions';
+  const CONFIG_KEY = 'plugins.' . self::SLUG;
+
   protected $directoryName;
 
   public static function getSubscribedEvents() {
@@ -17,7 +21,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
   }
 
   public function onPluginsInitialized() {
-    $this->directoryName = $this->config->get('plugins.admin-addon-revisions.directory', '.revisions');
+    $this->directoryName = $this->config->get(self::CONFIG_KEY . '.directory', '.revisions');
 
     // Add revisions directory to ignored folders
     $ignoreFolders = $this->config->get('system.pages.ignore_folders');
@@ -35,14 +39,14 @@ class AdminAddonRevisionsPlugin extends Plugin {
   }
 
   public function onAssetsInitialized() {
-    $this->grav['assets']->addCss('plugin://admin-addon-revisions/assets/style.css');
+    $this->grav['assets']->addCss('plugin://' . self::SLUG . '/assets/style.css');
   }
 
   public function onAdminMenu() {
     $twig = $this->grav['twig'];
     $twig->plugins_hooked_nav = (isset($twig->plugins_hooked_nav)) ? $twig->plugins_hooked_nav : [];
     $twig->plugins_hooked_nav['Revisions'] = [
-      'location' => 'revisions',
+      'location' => self::PAGE_LOCATION,
       'icon' => 'fa-file-text'
     ];
   }
@@ -56,19 +60,20 @@ class AdminAddonRevisionsPlugin extends Plugin {
   public function onTwigSiteVariables() {
     $twig = $this->grav['twig'];
     $page = $this->grav['page'];
+    $uri = $this->grav['uri'];
 
-    if ($page->slug() !== 'revisions') {
+    if ($page->slug() !== self::PAGE_LOCATION) {
       return;
     }
 
-    $action = $this->grav['uri']->param('action');
-    $page = $this->grav['admin']->page(true);
+    $action = $uri->param('action');
+    $page = $this->getCurrentPage();
     $twig->twig_vars['context'] = $page;
     $pageDir = $page->path();
     $revDir = $pageDir . DS . $this->directoryName;
 
     if ($action === 'diff') {
-      $rev = $this->grav['uri']->param('rev');
+      $rev = $uri->param('rev');
       $currentFiles = $this->scandirForFiles($pageDir);
       $revFiles = $this->scandirForFiles($revDir . DS . $rev);
 
@@ -140,7 +145,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
       $twig->twig_vars['equal'] = $equal;
       $twig->twig_vars['revision'] = $rev;
     } else {
-      if ($this->grav['uri']->basename() === 'revisions') {
+      if ($uri->basename() === self::PAGE_LOCATION) {
         $action = 'list-pages';
         $pages = $this->grav['pages']->instances();
         array_shift($pages);
@@ -173,17 +178,18 @@ class AdminAddonRevisionsPlugin extends Plugin {
 
   public function onAdminTaskExecute($e) {
     $method = $e['method'];
+    $uri = $this->grav['uri'];
 
-    if ($e['method'] === 'taskRevDelete') {
+    if ($method === 'taskRevDelete') {
       // TODO: Permission
 
-      $rev = $this->grav['uri']->param('rev');
+      $rev = $uri->param('rev');
       if (!$rev) {
         // TODO: Message
         return false;
       }
 
-      $page = $this->grav['admin']->page(true);
+      $page = $this->getCurrentPage();
       $pageDir = $page->path();
       $revsDir = $pageDir . DS . $this->directoryName;
       $revDir = $revsDir . DS . $rev;
@@ -266,7 +272,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
         $deletedRevision = false;
 
         // Check for maximum count and delete the oldest revisions first
-        $maximum = $this->config->get('plugins.admin-addon-revisions.limit.maximum', 0);
+        $maximum = $this->config->get(self::CONFIG_KEY . '.limit.maximum', 0);
         if ($maximum) {
           $revisions = $this->scandirForDirectories($revDir);
           if (count($revisions) > $maximum) {
@@ -278,7 +284,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
         }
 
         // Check for old revisions
-        $older = $this->config->get('plugins.admin-addon-revisions.limit.older', null);
+        $older = $this->config->get(self::CONFIG_KEY . '.limit.older', null);
         if ($older) {
           $revisions = $this->scandirForDirectories($revDir);
           foreach ($revisions as $rev) {
@@ -356,6 +362,10 @@ class AdminAddonRevisionsPlugin extends Plugin {
 
     $str = "$year-$month-$day $hour:$minute:$second";
     return strtotime($str);
+  }
+
+  private function getCurrentPage() {
+    return $this->grav['admin']->page(true);
   }
 
 }
