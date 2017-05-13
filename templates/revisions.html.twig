@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<h1>{{ context.title }}</h1>
+<h1>{{ context.title ?: 'Revisions' }}</h1>
 <div class="revision-container">
   {% if action == 'list-pages' %}
     {% for page in revPages %}

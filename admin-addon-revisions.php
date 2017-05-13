@@ -132,6 +132,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
           }
         }
         $twig->twig_vars['revPages'] = $pages;
+        $twig->twig_vars['context'] = null;
       } else {
         $action = 'list-revisions';
         $twig->twig_vars['revisions'] = array_diff(scandir($revDir), self::SCAN_EXCLUDE);
