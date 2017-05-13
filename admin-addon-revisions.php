@@ -98,13 +98,18 @@ class AdminAddonRevisionsPlugin extends Plugin {
 
         $mime = finfo_file($finfo, $oldFile);
         if (strpos($mime, "text") === 0) {
+          // Handle text files
           $change = ['filename' => $change, 'type' => 'text'];
           $diff = \Diff::compare( file_get_contents($oldFile), file_get_contents($newFile), true);
           $change['diff'] = $this->difftoHTML($diff);
         } else if (strpos($mime, "image") === 0) {
+          // Handle image files
           $change = ['filename' => $change, 'type' => 'image'];
           $change['oldUrl'] = $this->filePathToUrl($oldFile);
           $change['newUrl'] = $this->filePathToUrl($newFile);
+        } else {
+          // Handle anything else
+          $change = ['filename' => $change, 'type' => 'unknown'];
         }
       }
 
