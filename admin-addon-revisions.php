@@ -46,7 +46,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
     $this->autoload('AdminAddonRevisions', array(__DIR__ . '/src/'));
     self::$instance = $this;
 
-    $this->directoryName = $this->config->get(self::CONFIG_KEY . '.directory', '.revisions');
+    $this->directoryName = $this->config->get(self::CONFIG_KEY . '.directory', '.revs');
 
     // Add revisions directory to ignored folders
     $ignoreFolders = $this->config->get('system.pages.ignore_folders');

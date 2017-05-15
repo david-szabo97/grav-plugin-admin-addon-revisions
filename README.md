@@ -36,7 +36,7 @@ Here is the default configuration and an explanation of available options:
 
 ```yaml
 enabled: true
-directory: .revisions
+directory: .revs
 limit:
   maximum: 10
   older: 1 month
