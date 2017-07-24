@@ -236,7 +236,11 @@ class AdminAddonRevisionsPlugin extends Plugin {
   }
 
   private function debugMessage($msg) {
-    $this->grav['debugger']->addMessage($msg);
+    $admin_show_debug = $this->config->get(self::CONFIG_KEY . '.debug_output');
+    if($admin_show_debug){
+      $this->grav['debugger']->addMessage($msg);
+    }
+        //Else no debugMessage output
   }
 
   private function directoryToDate($dir) {
