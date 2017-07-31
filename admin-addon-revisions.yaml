@@ -1,4 +1,5 @@
 enabled: true
+debug: false
 directory: .revs
 limit:
   maximum: 50

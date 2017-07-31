@@ -236,11 +236,11 @@ class AdminAddonRevisionsPlugin extends Plugin {
   }
 
   private function debugMessage($msg) {
-    $this->grav['debugger']->addMessage($msg);
-  }
+    $debugEnabled = $this->config->get(self::CONFIG_KEY . '.debug');
 
-  private function directoryToDate($dir) {
-    
+    if ($debugEnabled) {
+      $this->grav['debugger']->addMessage($msg);
+    }
   }
 
   public function getCurrentPage() {

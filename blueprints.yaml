@@ -29,6 +29,18 @@ form:
       validate:
         type: bool
 
+    debug:
+      type: toggle
+      label: Debug mode
+      help: Enables debug mode, debug messages will appear in the debugger.
+      highlight: 0
+      default: 0
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
     directory:
       type: text
       label: Directory
