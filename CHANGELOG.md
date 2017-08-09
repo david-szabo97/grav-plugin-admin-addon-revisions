@@ -1,3 +1,10 @@
+# v1.1.1
+##  08/09/2017
+
+1. [](#improved)
+    * PHP5 compatibility
+    * Permissions
+
 # v1.1.0
 ##  08/01/2017
 
