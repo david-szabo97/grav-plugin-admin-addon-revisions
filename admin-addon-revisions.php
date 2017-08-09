@@ -16,7 +16,6 @@ class AdminAddonRevisionsPlugin extends Plugin {
 
   const SLUG = 'admin-addon-revisions';
   const PAGE_LOCATION = 'revisions';
-  const CONFIG_KEY = 'plugins.' . self::SLUG;
 
   protected $directoryName;
 
@@ -42,11 +41,15 @@ class AdminAddonRevisionsPlugin extends Plugin {
     $this->loader->register(true);
   }
 
+  public function configKey() {
+    return 'plugins' . self::SLUG;
+  }
+
   public function onPluginsInitialized() {
     $this->autoload('AdminAddonRevisions', array(__DIR__ . '/src/'));
     self::$instance = $this;
 
-    $this->directoryName = $this->config->get(self::CONFIG_KEY . '.directory', '.revs');
+    $this->directoryName = $this->config->get($this->configKey() . '.directory', '.revs');
 
     // Add revisions directory to ignored folders
     $ignoreFolders = $this->config->get('system.pages.ignore_folders');
@@ -202,7 +205,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
         $deletedRevision = false;
 
         // Check for maximum count and delete the oldest revisions first
-        $maximum = $this->config->get(self::CONFIG_KEY . '.limit.maximum', 0);
+        $maximum = $this->config->get($this->configKey() . '.limit.maximum', 0);
         if ($maximum && ctype_digit($maximum)) {
           // Refresh instances
           $revisions->instances(true);
@@ -216,7 +219,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
         }
 
         // Check for old revisions
-        $older = $this->config->get(self::CONFIG_KEY . '.limit.older', null);
+        $older = $this->config->get($this->configKey() . '.limit.older', null);
         if ($older) {
           $instances = $revisions->instances(true);
           foreach ($revisions as $rev) {
@@ -236,7 +239,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
   }
 
   private function debugMessage($msg) {
-    $debugEnabled = $this->config->get(self::CONFIG_KEY . '.debug');
+    $debugEnabled = $this->config->get($this->configKey() . '.debug');
 
     if ($debugEnabled) {
       $this->grav['debugger']->addMessage($msg);
