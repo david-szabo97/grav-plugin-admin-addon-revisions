@@ -1,3 +1,12 @@
+# v1.2.0
+##  08/30/2017
+
+1. [](#new)
+    * Delete all revisions via button
+
+2. [](#bugfix)
+    * Fixed redirect after task handling
+
 # v1.1.1
 ##  08/09/2017
 
