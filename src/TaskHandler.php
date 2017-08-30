@@ -88,4 +88,19 @@ class TaskHandler {
     return true;
   }
 
+  public function taskRevDeleteAll() {
+    $pages = $this->plugin->grav()['pages']->instances();
+    foreach ($pages as $page) {
+      $revisions = new Revisions($page);
+      $revisions->delete();
+      unset($revisions);
+    }
+
+    $messages = $this->plugin->grav()['messages'];
+    $messages->add('Succesfully deleted all revisions', 'info');
+    $this->plugin->grav()->redirect($this->uri->path());
+
+    return true;
+  }
+
 }
