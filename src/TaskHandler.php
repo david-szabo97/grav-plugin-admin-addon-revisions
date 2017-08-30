@@ -26,7 +26,7 @@ class TaskHandler {
     $rev = $this->uri->param('rev');
     if (!$rev) {
       $messages->add("Revision param is missing", 'error');
-      $this->plugin->grav()->redirect($this->uri->url());
+      $this->plugin->grav()->redirect($this->uri->path());
       return false;
     }
 
@@ -34,14 +34,14 @@ class TaskHandler {
     $revision = new Revision($page, $rev);
     if (!$revision->exists()) {
       $messages->add("Revision not found", 'error');
-      $this->plugin->grav()->redirect($this->uri->url());
+      $this->plugin->grav()->redirect($this->uri->path());
       return false;
     }
 
     $revision->delete();
 
     $messages->add("Succesfully deleted the '$rev' revision", 'info');
-    $this->plugin->grav()->redirect($this->uri->url());
+    $this->plugin->grav()->redirect($this->uri->path());
 
     return true;
   }
@@ -83,7 +83,7 @@ class TaskHandler {
 
     $messages = $this->plugin->grav()['messages'];
     $messages->add("Succesfully reverted to the '$rev' revision", 'info');
-    $this->plugin->grav()->redirect($this->uri->url());
+    $this->plugin->grav()->redirect($this->uri->path());
 
     return true;
   }
