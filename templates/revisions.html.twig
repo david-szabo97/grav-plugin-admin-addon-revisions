@@ -11,6 +11,10 @@
       <a class="button disable-after-click" href="{{ uri.addNonce(uri.route(true) ~ '/task' ~ config.system.param_sep ~ 'revRevert' ~ '/rev' ~ config.system.param_sep ~ revision.name, 'admin-form', 'admin-nonce') }}" ><i class="fa fa-reply"></i> Revert</a>
       <a class="button disable-after-click" href="{{ uri.addNonce(uri.route(true) ~ '/task' ~ config.system.param_sep ~ 'revDelete' ~ '/rev' ~ config.system.param_sep ~ revision.name, 'admin-form', 'admin-nonce') }}" ><i class="fa fa-close"></i> Delete</a>
     {% endif %}
+
+    {% if action == 'list-pages' %}
+      <a class="button" href="#delete" data-remodal-target="delete" data-delete-url="{{ uri.addNonce(uri.route(true) ~ '/task' ~ config.system.param_sep ~ 'revDeleteAll', 'admin-form', 'admin-nonce') }}"><i class="fa fa-close"></i> Delete All</a>
+    {% endif %}
   </div>
 
   {% if action == 'list-pages' or action == 'list-revisions' %}<h1><i class="fa fa-fw fa-file-text-o"></i> Manage Revisions</h1>{% endif %}
@@ -103,5 +107,16 @@
         </ul>
       {% endif %}
     {% endif %}
+  </div>
+
+  <div class="remodal" data-remodal-id="delete" data-remodal-options="hashTracking: false">
+    <form>
+      <h1>{{ "PLUGIN_ADMIN.MODAL_DELETE_PAGE_CONFIRMATION_REQUIRED_TITLE"|tu }}</h1>
+      <br>
+      <div class="button-bar">
+        <button data-remodal-action="cancel" class="button secondary remodal-cancel"><i class="fa fa-fw fa-close"></i> {{ "PLUGIN_ADMIN.CANCEL"|tu }}</button>
+        <a class="button disable-after-click" data-delete-action href="#"><i class="fa fa-fw fa-check"></i> {{ "PLUGIN_ADMIN.CONTINUE"|tu }}</a>
+      </div>
+    </form>
   </div>
 {% endblock %}
