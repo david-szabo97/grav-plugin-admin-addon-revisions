@@ -1,3 +1,10 @@
+# v1.3.0
+##  12/02/2017
+
+1. [](#feature)
+    * Add ignore files feature
+
+
 # v1.2.1
 ##  12/02/2017
 
