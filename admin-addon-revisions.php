@@ -42,7 +42,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
   }
 
   public function configKey() {
-    return 'plugins' . self::SLUG;
+    return 'plugins.' . self::SLUG;
   }
 
   public function onPluginsInitialized() {
