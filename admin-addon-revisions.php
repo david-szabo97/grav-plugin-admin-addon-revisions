@@ -258,4 +258,16 @@ class AdminAddonRevisionsPlugin extends Plugin {
     return $this->grav;
   }
 
+  public function isIgnoredFile($file) {
+    $patterns = $this->config->get($this->configKey() . '.ignore_files', []);
+
+    foreach ($patterns as $pattern) {
+      if (preg_match($pattern, $file)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
 }

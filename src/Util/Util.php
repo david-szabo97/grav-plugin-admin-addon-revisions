@@ -15,8 +15,10 @@ class Util {
     $files = array_diff(scandir($directory), ['.', '..', AdminAddonRevisionsPlugin::instance()->directoryName()]);
 
     $files = array_filter($files, function($file) use($directory, $fileOnly) {
-      $t = is_dir($directory . DS . $file) === !$fileOnly;
-      return $t;
+      $fileOnlyCondition = is_dir($directory . DS . $file) === !$fileOnly;
+      $ignoredCondition = AdminAddonRevisionsPlugin::instance()->isIgnoredFile($directory . DS . $file);
+
+      return $fileOnlyCondition && !$ignoredCondition;
     });
 
     return $files;
@@ -31,7 +33,7 @@ class Util {
   }
 
   public static function fileChanged($path1, $path2) {
-    return filesize($path1) !== filesize($path2) 
+    return filesize($path1) !== filesize($path2)
             || md5_file($path1) !== md5_file($path2);
   }
 
