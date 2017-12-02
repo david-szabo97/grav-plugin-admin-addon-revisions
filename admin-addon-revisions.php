@@ -247,7 +247,13 @@ class AdminAddonRevisionsPlugin extends Plugin {
   }
 
   public function getCurrentPage() {
-    return $this->grav['admin']->page(true);
+    $page = $this->grav['admin']->page(true);
+
+    if (!$page) {
+      $page = $this->grav['admin']->page();
+    }
+
+    return $page;
   }
 
   public function directoryName() {
