@@ -1,5 +1,5 @@
 name: Admin Addon Revisions
-version: 1.2.0
+version: 1.2.1
 description: An extension for Admin plugin which adds revisions for pages. Integrates with admin, easily revert back to a previous revision whenever you want!
 icon: plug
 author:
@@ -53,3 +53,8 @@ form:
     limit.older:
       type: text
       label: Delete older than
+
+    ignore_files:
+      label: Ignore files (regexp)
+      type: array
+      value_only: true

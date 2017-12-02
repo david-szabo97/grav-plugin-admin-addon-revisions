@@ -1,3 +1,9 @@
+# v1.2.1
+##  12/02/2017
+
+1. [](#bugfix)
+    * Fixed wrong configuration keys were used (none at all)
+
 # v1.2.0
 ##  08/30/2017
 
