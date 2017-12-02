@@ -21,7 +21,7 @@ To install this plugin, just download the zip version of this repository and unz
 You should now have all the plugin files under
 
     /your/site/grav/user/plugins/admin-addon-revisions
-	
+
 > NOTE: This plugin is a modular component for Grav which requires [Grav](http://github.com/getgrav/grav), [Admin](https://github.com/getgrav/grav-plugin-admin), [Error](https://github.com/getgrav/grav-plugin-error) and [Problems](https://github.com/getgrav/grav-plugin-problems) to operate.
 
 ## WARNING
@@ -40,11 +40,26 @@ directory: .revs
 limit:
   maximum: 10
   older: 1 month
+ignore_files: []
 ```
 
 * `directory` - revisions will be stored in this folder inside the page's folder
+
 * `limit.maximum` - limits the number of revisions per page (use `0` to disable)
+
 * `limit.older` - limits the number of revisions per page by checking the creation date of the revision, works with any `strtotime` compatible string. (1 month, 2 months, 1 day, 30 days, etc.)  (use `0` to disable)
+
+* `ignore_files` - an array of regular expressions to ignore files when looking for changes between revisions
+
+  In this example we ignore all `png` and `jpg` files in the `test` page's folder.
+  ```
+  /pages\/test\/(.*).png$/
+  /pages\/test\/(.*).jpg$/
+  ```
+  If you want to ignore `png` files in all pages' folders then you can use something like this:
+  ```
+  /png$/
+  ```
 
 ## Usage
 
