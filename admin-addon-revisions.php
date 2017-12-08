@@ -150,6 +150,11 @@ class AdminAddonRevisionsPlugin extends Plugin {
 
   public function onPageProcessed(Event $e) {
     $page = $e['page'];
+
+    if (!$page->id()) {
+      return;
+    }
+
     $this->debugMessage('--- Admin Addon Revision - Analyzing \'' . $page->title(). '\' ---');
 
     $revisions = new Revisions($page);
