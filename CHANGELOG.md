@@ -1,3 +1,9 @@
+# v1.3.2
+##  12/08/2017
+
+1. [](#bugfix)
+    * Fixed error when accesing a generated page (Fix #13)
+
 # v1.3.1
 ##  12/02/2017
 
