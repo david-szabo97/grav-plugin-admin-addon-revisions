@@ -1,3 +1,9 @@
+# v1.3.3
+##  06/13/2018
+
+1. [](#bugfix)
+    * Fixed error when generating a revision for a virtual page (Fix #17)
+
 # v1.3.2
 ##  12/08/2017
 
