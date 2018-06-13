@@ -151,7 +151,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
   public function onPageProcessed(Event $e) {
     $page = $e['page'];
 
-    if (!$page->id()) {
+    if (!$page->id() || !$page->exists()) {
       return;
     }
 
