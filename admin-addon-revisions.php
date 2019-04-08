@@ -60,6 +60,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
     $this->enable([
       'onPageProcessed' => ['onPageProcessed', 0],
       'onAdminTwigTemplatePaths' => ['onAdminTwigTemplatePaths', 0],
+      'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0],
       'onAdminTaskExecute' => ['onAdminTaskExecute', 0],
       'onTwigSiteVariables' => ['onTwigSiteVariables', 0],
       'onAdminMenu' => ['onAdminMenu', 0],
@@ -78,6 +79,14 @@ class AdminAddonRevisionsPlugin extends Plugin {
       'location' => self::PAGE_LOCATION,
       'icon' => 'fa-file-text'
     ];
+  }
+
+  /**
+   * Add current directory to twig lookup paths.
+   */
+  public function onTwigTemplatePaths()
+  {
+      $this->grav['twig']->twig_paths[] = __DIR__ . '/templates';
   }
 
   public function onAdminTwigTemplatePaths($e) {
