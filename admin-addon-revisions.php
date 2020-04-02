@@ -32,7 +32,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
     return self::$instance;
   }
 
-  private function autoload($namespace, $folders) {
+  private function pautoload($namespace, $folders) {
     if ($this->loader === null) {
       $this->loader = new ClassLoader();
     }
@@ -46,7 +46,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
   }
 
   public function onPluginsInitialized() {
-    $this->autoload('AdminAddonRevisions', array(__DIR__ . '/src/'));
+    $this->pautoload('AdminAddonRevisions', array(__DIR__ . '/src/'));
     self::$instance = $this;
 
     $this->directoryName = $this->config->get($this->configKey() . '.directory', '.revs');
@@ -115,7 +115,7 @@ class AdminAddonRevisionsPlugin extends Plugin {
         $pages = $this->grav['pages']->instances();
         foreach ($pages as $k => &$page) {
           // Remove folders
-          if (!$page->file()) {
+          if (!$page || !$page->file()) {
             unset($pages[$k]);
             continue;
           }
