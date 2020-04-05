@@ -112,8 +112,8 @@ class AdminAddonRevisionsPlugin extends Plugin {
     } else {
       if ($uri->basename() === self::PAGE_LOCATION) {
         $action = 'list-pages';
-        $pages = $this->grav['pages']->instances();
-        foreach ($pages as $k => &$page) {
+        $pages = $this->grav['pages']->all();
+        foreach ($pages as $k => $page) {
           // Remove folders
           if (!$page->file()) {
             unset($pages[$k]);
