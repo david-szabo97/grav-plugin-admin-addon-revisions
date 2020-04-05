@@ -53,8 +53,10 @@ class AdminAddonRevisionsPlugin extends Plugin {
 
     // Add revisions directory to ignored folders
     $ignoreFolders = $this->config->get('system.pages.ignore_folders');
-    $ignoreFolders[] = $this->directoryName;
-    $this->config->set('system.pages.ignore_folders', $ignoreFolders);
+    if (!in_array($this->directoryName, $ignoreFolders)) {
+      $ignoreFolders[] = $this->directoryName;
+      $this->config->set('system.pages.ignore_folders', $ignoreFolders);
+    }
 
     // Enable events
     $this->enable([
