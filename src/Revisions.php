@@ -26,10 +26,6 @@ class Revisions {
     return $this->page;
   }
 
-  public function name() {
-    return $this->name;
-  }
-
   public function path() {
     return $this->path;
   }
