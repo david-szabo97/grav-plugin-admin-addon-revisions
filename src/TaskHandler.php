@@ -5,9 +5,11 @@ use AdminAddonRevisions\Util\Util;
 
 class TaskHandler {
 
+  private $plugin;
+  private $uri;
+  
   public function __construct($plugin) {
     $this->plugin = $plugin;
-    $this->admin = $plugin->grav()['admin'];
     $this->uri = $plugin->grav()['uri'];
   }
 
