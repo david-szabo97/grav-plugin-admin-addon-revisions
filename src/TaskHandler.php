@@ -1,19 +1,23 @@
 <?php
+
 namespace AdminAddonRevisions;
 
 use AdminAddonRevisions\Util\Util;
 
-class TaskHandler {
+class TaskHandler
+{
 
   private $plugin;
   private $uri;
-  
-  public function __construct($plugin) {
+
+  public function __construct($plugin)
+  {
     $this->plugin = $plugin;
     $this->uri = $plugin->grav()['uri'];
   }
 
-  public function execute($method) {
+  public function execute($method)
+  {
     if (method_exists($this, $method)) {
       return call_user_func([$this, $method]);
     }
@@ -21,7 +25,8 @@ class TaskHandler {
     return false;
   }
 
-  public function taskRevDelete() {
+  public function taskRevDelete()
+  {
     $messages = $this->plugin->grav()['messages'];
     // TODO: Permission
 
@@ -48,7 +53,8 @@ class TaskHandler {
     return true;
   }
 
-  public function taskRevRevert() {
+  public function taskRevRevert()
+  {
     // TODO: Permission
 
     $rev = $this->uri->param('rev');
@@ -90,7 +96,8 @@ class TaskHandler {
     return true;
   }
 
-  public function taskRevDeleteAll() {
+  public function taskRevDeleteAll()
+  {
     $pages = $this->plugin->grav()['pages']->instances();
     foreach ($pages as $page) {
       $revisions = new Revisions($page);
@@ -104,5 +111,4 @@ class TaskHandler {
 
     return true;
   }
-
 }

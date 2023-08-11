@@ -1,4 +1,5 @@
 <?php
+
 namespace AdminAddonRevisions;
 
 use Grav\Common\Filesystem\Folder;
@@ -6,7 +7,8 @@ use AdminAddonRevisions\Util\Util;
 use AdminAddonRevisions\Util\Diff;
 use Grav\Plugin\AdminAddonRevisionsPlugin;
 
-class Revision {
+class Revision
+{
 
   const CHANGE_COUNT = 1;
   const CHANGE_NOT_EXISTS = 2;
@@ -19,7 +21,8 @@ class Revision {
   protected $path = null;
   protected $changes = null;
 
-  public function __construct($page, $name = null) {
+  public function __construct($page, $name = null)
+  {
     $this->plugin = AdminAddonRevisionsPlugin::instance();
     $this->page = $page;
     $this->name = $name;
@@ -27,15 +30,18 @@ class Revision {
     $this->path();
   }
 
-  public function page() {
+  public function page()
+  {
     return $this->page;
   }
 
-  public function name() {
+  public function name()
+  {
     return $this->name;
   }
 
-  public function path() {
+  public function path()
+  {
     if ($this->path === null && $this->name !== null) {
       $this->path = $this->page->path() . DS . $this->plugin->directoryName() . DS . $this->name();
     }
@@ -43,15 +49,18 @@ class Revision {
     return $this->path;
   }
 
-  public function delete() {
+  public function delete()
+  {
     Folder::delete($this->path);
   }
 
-  public function exists() {
+  public function exists()
+  {
     return file_exists($this->path) && is_dir($this->path);
   }
 
-  public function create() {
+  public function create()
+  {
     $this->name = date('Ymd-His');
 
     // Skip if exists
@@ -75,11 +84,13 @@ class Revision {
     return true;
   }
 
-  public function files() {
+  public function files()
+  {
     return Util::scandirForFiles($this->path);
   }
 
-  public function createdAt() {
+  public function createdAt()
+  {
     $dir = $this->name;
 
     $year = substr($dir, 0, 4);
@@ -93,7 +104,8 @@ class Revision {
     return strtotime($str);
   }
 
-  public function changesFast() {
+  public function changesFast()
+  {
     $currentDir = $this->page()->path();
     $currentFiles = Util::scandirForFiles($currentDir);
 
@@ -120,7 +132,8 @@ class Revision {
     return false;
   }
 
-  public function changes($refresh = false) {
+  public function changes($refresh = false)
+  {
     if (!$refresh && $this->changes !== null) {
       return $this->changes;
     }
@@ -210,5 +223,4 @@ class Revision {
 
     return $this->changes;
   }
-
 }
