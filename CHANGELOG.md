@@ -1,3 +1,16 @@
+# v2.0.0
+##  08/11/2023
+
+1. [](#new)
+    * Scheduled cleanup job
+
+2. [](#bugfix)
+    * Fixed multibyte strings in text diffs (Fix #26)
+    * Fixed deleting old revisions
+    * Fixed image diff exception
+    * Bail out if revisions directory is not writable (Fix #28)
+    * Code cleanup / fixes
+
 # v1.4.0
 ##  04/05/2020
 
