@@ -204,6 +204,10 @@ class AdminAddonRevisionsPlugin extends Plugin
     $this->debugMessage('--- Admin Addon Revision - Analyzing \'' . $page->title() . '\' ---');
 
     $revisions = new Revisions($page);
+    if (!$revisions->writable()) {
+      $this->debugMessage('-- Not writable, skipping');
+      return;
+    }
 
     // Make sure we have a revisions directory
     if (!$revisions->exists()) {

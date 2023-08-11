@@ -39,6 +39,11 @@ class Revisions
     Folder::delete($this->path);
   }
 
+  public function writable()
+  {
+    return is_writable($this->path);
+  }
+
   public function exists()
   {
     return file_exists($this->path) && is_dir($this->path);
