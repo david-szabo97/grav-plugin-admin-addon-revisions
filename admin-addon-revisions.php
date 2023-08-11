@@ -229,10 +229,10 @@ class AdminAddonRevisionsPlugin extends Plugin {
         $older = $this->config->get($this->configKey() . '.limit.older', null);
         if ($older) {
           $instances = $revisions->instances(true);
-          foreach ($revisions as $rev) {
+          foreach ($instances as $rev) {
             $time = $rev->createdAt();
             $olderTime = strtotime('-' . $older);
-            if ($olderTime !== false && $older > $time) {
+            if ($olderTime !== false && $olderTime > $time) {
               $this->debugMessage('-- Deleting revision: ' . $rev->name() . ', older than ' . $older . '.');
               $rev->delete();
               $deletedRevision = true;
