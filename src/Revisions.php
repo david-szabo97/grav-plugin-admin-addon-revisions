@@ -3,7 +3,6 @@ namespace AdminAddonRevisions;
 
 use Grav\Common\Filesystem\Folder;
 use AdminAddonRevisions\Util\Util;
-use AdminAddonRevisions\Util\Diff;
 use AdminAddonRevisions\Revision;
 use Grav\Plugin\AdminAddonRevisionsPlugin;
 
