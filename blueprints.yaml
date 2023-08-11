@@ -1,4 +1,6 @@
 name: Admin Addon Revisions
+slug: admin-addon-revisions
+type: plugin
 version: 1.4.0
 description: An extension for Admin plugin which adds revisions for pages. Integrates with admin, easily revert back to a previous revision whenever you want!
 icon: plug
