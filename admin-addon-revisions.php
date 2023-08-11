@@ -206,43 +206,51 @@ class AdminAddonRevisionsPlugin extends Plugin {
         return;
       }
 
-      // Limit number of revisions
-      $deletedRevision = false;
-      do {
-        $deletedRevision = false;
-
-        // Check for maximum count and delete the oldest revisions first
-        $maximum = $this->config->get($this->configKey() . '.limit.maximum', 0);
-        if ($maximum && ctype_digit($maximum)) {
-          // Refresh instances
-          $revisions->instances(true);
-          // Increment by one because we don't want to count the current revision
-          if ($revisions->count() > $maximum + 1) {
-            $firstRev = $revisions->first();
-            $this->debugMessage('-- Deleting revision: ' . $firstRev->name() . ', limit exceeded.');
-            $firstRev->delete();
-            $deletedRevision = true;
-          }
-        }
-
-        // Check for old revisions
-        $older = $this->config->get($this->configKey() . '.limit.older', null);
-        if ($older) {
-          $instances = $revisions->instances(true);
-          foreach ($instances as $rev) {
-            $time = $rev->createdAt();
-            $olderTime = strtotime('-' . $older);
-            if ($olderTime !== false && $olderTime > $time) {
-              $this->debugMessage('-- Deleting revision: ' . $rev->name() . ', older than ' . $older . '.');
-              $rev->delete();
-              $deletedRevision = true;
-            }
-          }
-        }
-      } while($deletedRevision);
+      $this->cleanupRevisions($revisions);
     } else {
       $this->debugMessage('-- No changes.');
     }
+  }
+  
+  private function cleanupRevisions($revisions) {
+    if (!$revisions->exists()) {
+      return;
+    }
+    
+    // Limit number of revisions
+    $deletedRevision = false;
+    do {
+      $deletedRevision = false;
+
+      // Check for maximum count and delete the oldest revisions first
+      $maximum = $this->config->get($this->configKey() . '.limit.maximum', 0);
+      if ($maximum && ctype_digit($maximum)) {
+        // Refresh instances
+        $revisions->instances(true);
+        // Increment by one because we don't want to count the current revision
+        if ($revisions->count() > $maximum + 1) {
+          $firstRev = $revisions->first();
+          $this->debugMessage('-- Deleting revision: ' . $firstRev->name() . ', limit exceeded.');
+          $firstRev->delete();
+          $deletedRevision = true;
+        }
+      }
+
+      // Check for old revisions
+      $older = $this->config->get($this->configKey() . '.limit.older', null);
+      if ($older) {
+        $instances = $revisions->instances(true);
+        foreach ($instances as $rev) {
+          $time = $rev->createdAt();
+          $olderTime = strtotime('-' . $older);
+          if ($olderTime !== false && $olderTime > $time) {
+            $this->debugMessage('-- Deleting revision: ' . $rev->name() . ', older than ' . $older . '.');
+            $rev->delete();
+            $deletedRevision = true;
+          }
+        }
+      }
+    } while($deletedRevision);
   }
 
   private function debugMessage($msg) {
