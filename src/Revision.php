@@ -197,8 +197,8 @@ class Revision {
       } else if (strpos($mime, "image") === 0) {
         // Handle image files
         $change = ['filename' => $change, 'type' => 'image'];
-        $change['oldUrl'] = $this->filePathToUrl($oldFile);
-        $change['newUrl'] = $this->filePathToUrl($newFile);
+        $change['oldUrl'] = Util::filePathToUrl($oldFile);
+        $change['newUrl'] = Util::filePathToUrl($newFile);
       } else {
         // Handle anything else
         $change = ['filename' => $change, 'type' => 'unknown'];
