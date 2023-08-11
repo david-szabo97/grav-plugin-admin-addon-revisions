@@ -1,6 +1,9 @@
 enabled: true
 debug: false
 directory: .revs
+scheduled_cleanup:
+  enabled: true
+  at: 0 0 * * *
 limit:
   maximum: 50
   older: 1 year
