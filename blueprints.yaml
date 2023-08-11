@@ -14,8 +14,8 @@ docs: https://github.com/david-szabo97/grav-plugin-admin-addon-revisions/blob/ma
 license: MIT
 
 dependencies:
-    - { name: grav, version: '>=1.6.0' }
-    - { name: admin, version: '>=1.0.0' }
+  - { name: grav, version: ">=1.6.0" }
+  - { name: admin, version: ">=1.0.0" }
 
 form:
   validation: strict
@@ -65,13 +65,13 @@ form:
       label: Scheduled Job Frequency
       size: medium
       help: Use 'cron' format
-      default: '0 0 * * *'
-      placeholder: '0 0 * * *'
+      default: "0 0 * * *"
+      placeholder: "0 0 * * *"
 
     scheduled_cleanup.logs:
       type: text
       label: Scheduled Job Log File
-      placeholder: 'logs/admin-addon-revisions-index.out'
+      placeholder: "logs/admin-addon-revisions-index.out"
       size: medium
 
     limit.maximum:
