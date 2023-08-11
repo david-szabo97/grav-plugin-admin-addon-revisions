@@ -8,7 +8,7 @@ Installing the Admin Addon Revisions plugin can be done in one of two ways. The 
 
 ### GPM Installation (Preferred)
 
-The simplest way to install this plugin is via the [Grav Package Manager (GPM)](http://learn.getgrav.org/advanced/grav-gpm) through your system's terminal (also called the command line).  From the root of your Grav install type:
+The simplest way to install this plugin is via the [Grav Package Manager (GPM)](http://learn.getgrav.org/advanced/grav-gpm) through your system's terminal (also called the command line). From the root of your Grav install type:
 
     bin/gpm install admin-addon-revisions
 
@@ -43,20 +43,23 @@ limit:
 ignore_files: []
 ```
 
-* `directory` - revisions will be stored in this folder inside the page's folder
+- `directory` - revisions will be stored in this folder inside the page's folder
 
-* `limit.maximum` - limits the number of revisions per page (use `0` to disable)
+- `limit.maximum` - limits the number of revisions per page (use `0` to disable)
 
-* `limit.older` - limits the number of revisions per page by checking the creation date of the revision, works with any `strtotime` compatible string. (1 month, 2 months, 1 day, 30 days, etc.)  (use `0` to disable)
+- `limit.older` - limits the number of revisions per page by checking the creation date of the revision, works with any `strtotime` compatible string. (1 month, 2 months, 1 day, 30 days, etc.) (use `0` to disable)
 
-* `ignore_files` - an array of regular expressions to ignore files when looking for changes between revisions
+- `ignore_files` - an array of regular expressions to ignore files when looking for changes between revisions
 
   In this example we ignore all `png` and `jpg` files in the `test` page's folder.
+
   ```
   /pages\/test\/(.*).png$/
   /pages\/test\/(.*).jpg$/
   ```
+
   If you want to ignore `png` files in all pages' folders then you can use something like this:
+
   ```
   /png$/
   ```
@@ -68,4 +71,3 @@ A **Revisions** link will appear in the **Admin** navigation sidebar. By navigat
 ## To Do
 
 - [ ] Translation support
-
