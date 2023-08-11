@@ -66,11 +66,39 @@ class AdminAddonRevisionsPlugin extends Plugin {
       'onTwigSiteVariables' => ['onTwigSiteVariables', 0],
       'onAdminMenu' => ['onAdminMenu', 0],
       'onAssetsInitialized' => ['onAssetsInitialized', 0],
+      'onSchedulerInitialized' => ['onSchedulerInitialized', 0],
     ]);
   }
 
   public function onAssetsInitialized() {
     $this->grav['assets']->addCss('plugin://' . self::SLUG . '/assets/style.css');
+  }
+  
+  public static function CleanupJob() {
+    $instance = AdminAddonRevisionsPlugin::instance();
+    $instance->cleanupRevisionsForAllPages();
+  }
+  
+  public function cleanupRevisionsForAllPages() {
+    $allPages = $this->grav['pages']->all();
+    foreach ($allPages as $page) {
+      $revisions = new Revisions($page);
+      $this->cleanupRevisions($revisions);
+    }
+  }
+  
+  public function onSchedulerInitialized($e): void {
+      $config = $this->config();
+
+      if (!empty($config['scheduled_cleanup']['enabled'])) {
+          $scheduler = $e['scheduler'];
+          $at = $config['scheduled_cleanup']['at'] ?? '0 0 * * *';
+          $logs = $config['scheduled_cleanup']['logs'] ?? '';
+          $job = $scheduler->addFunction('Grav\Plugin\AdminAddonRevisionsPlugin::CleanupJob', [], self::SLUG.'-cleanup');
+          $job->at($at);
+          $job->output($logs);
+          $job->backlink('/plugins/' . self::SLUG);
+      }
   }
 
   public function onAdminMenu() {

@@ -48,6 +48,32 @@ form:
       label: Directory
       help: Be careful, don't change this if you don't know the consequences!
 
+    scheduled_cleanup.enabled:
+      type: toggle
+      label: Enable Cleanup Scheduled Job
+      help: Use the Grav Scheduler to kick off a background cleanup job
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
+    scheduled_cleanup.at:
+      type: cron
+      label: Scheduled Job Frequency
+      size: medium
+      help: Use 'cron' format
+      default: '0 0 * * *'
+      placeholder: '0 0 * * *'
+
+    scheduled_cleanup.logs:
+      type: text
+      label: Scheduled Job Log File
+      placeholder: 'logs/admin-addon-revisions-index.out'
+      size: medium
+
     limit.maximum:
       type: text
       label: Maximum revisions per page
