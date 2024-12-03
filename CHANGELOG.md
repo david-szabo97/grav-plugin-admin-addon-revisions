@@ -1,4 +1,10 @@
 # v2.0.0
+##  03/12/2024
+
+1. [](#bugfix)
+    * Fix revisions directory not created
+
+# v2.0.0
 ##  08/11/2023
 
 1. [](#new)
