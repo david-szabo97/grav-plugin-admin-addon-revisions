@@ -41,7 +41,7 @@ class Revisions
 
   public function writable()
   {
-    return is_writable($this->path);
+    return is_writable(dirname($this->path)) && (!$this->exists() || ($this->exists() && is_writable($this->path)));
   }
 
   public function exists()
