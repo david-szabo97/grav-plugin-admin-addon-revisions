@@ -41,7 +41,13 @@ class Revisions
 
   public function writable()
   {
-    return is_writable(dirname($this->path)) && (!$this->exists() || ($this->exists() && is_writable($this->path)));
+    $locator = $this->plugin->grav()['locator'];
+    list($scheme,) = $locator->normalize($this->path, false, true);
+    if (!is_string($scheme) || $scheme !== 'file') {
+      return false;
+    }
+
+    return stream_is_local($this->path) && is_writable(dirname($this->path)) && (!$this->exists() || ($this->exists() && is_writable($this->path)));
   }
 
   public function exists()
