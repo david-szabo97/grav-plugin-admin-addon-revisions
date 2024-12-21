@@ -1,3 +1,9 @@
+# v2.0.2
+##  21/12/2024
+
+1. [](#bugfix)
+    * Fix read only exception when accessing plugin custom pages
+
 # v2.0.1
 ##  03/12/2024
 
